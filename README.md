@@ -41,3 +41,65 @@ dependencies{
 这里采用Groovy作为插件语言,将gradle_plugin/src/java重命名为groovy用来放置groovy代码
 > groovy目录下当然也能添加java类, 建议按语言分类, 这种情况可以保留java目录新建groovy目录
 
+## 插件模型
+
+编写简单的插件模型发布到本地仓库**gradle_plugin/src/main/groovy/com/example/plugin/ComponentPlugin.groovy**
+```groovy
+package com.example.plugin
+
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+
+class ComponentPlugin implements Plugin<Project> {
+
+    @Override
+    void apply(Project project) {
+        println "ComponentPlugin apply for $project"
+    }
+}
+```
+新建插件映射文件**gradle_plugin/src/main/resources/META-INF/gradle-plugins/com.android.component.properties**
+```properties
+implementation-class=com.example.plugin.ComponentPlugin
+```
+
+添加uploadArchives任务,该任务发布插件到本地maven仓库,需要引入maven插件
+**gradle_plugin/build.gradle**中添加
+```
+apply plugin: 'maven'
+
+uploadArchives{
+    repositories.mavenDeployer{
+        repository(url:uri("../repo"))
+        pom.project{
+            groupId = 'com.example'
+            artifactId = 'componentization'
+            version = '1.0'
+        }
+    }
+}
+```
+groupId,artifactId,version这三个可以自由定义, 最终使用时形如:
+```
+dependencies{
+    classpath "$groupId:$artifactId:$version"
+}
+```
+执行`./gradlew uploadArchives`后可以看到顶级目录下生成repo
+```
+repo/
+└── com
+    └── example
+        └── componentization
+            ├── 1.0
+            │   ├── componentization-1.0.jar
+            │   ├── componentization-1.0.jar.md5
+            │   ├── componentization-1.0.jar.sha1
+            │   ├── componentization-1.0.pom
+            │   ├── componentization-1.0.pom.md5
+            │   └── componentization-1.0.pom.sha1
+            ├── maven-metadata.xml
+            ├── maven-metadata.xml.md5
+            └── maven-metadata.xml.sha1
+
+```
