@@ -25,3 +25,19 @@ include ':component_video'
 include ':component_music'
 ```
 好处是可以选择多行进行注释, 编写Gradle插件时比较方便.
+
+## 添加Gradle插件模块
+新建一个java-library的模块**gradle_plugin**, 通过改`apply plugin: 'java'`为`apply plugin: 'groovy'`将
+java library变成groovy工程. 加入gradle插件需要的依赖
+```groovy
+dependencies{
+    implementation gradleApi()
+    implementation localGroovy()
+    //如果加了这个最好也重构到顶级构建脚本下
+    implementation 'com.android.tools.build:gradle:3.2.1'
+}
+```
+
+这里采用Groovy作为插件语言,将gradle_plugin/src/java重命名为groovy用来放置groovy代码
+> groovy目录下当然也能添加java类, 建议按语言分类, 这种情况可以保留java目录新建groovy目录
+

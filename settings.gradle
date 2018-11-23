@@ -1,3 +1,4 @@
 include ':app'
 include ':component_video'
 include ':component_music'
+include ':gradle_plugin'
