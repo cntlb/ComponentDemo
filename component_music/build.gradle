@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.component'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -6,7 +6,8 @@ android {
 
 
     defaultConfig {
-        applicationId "com.example.music"
+        //作为组件单独运行即可,不需要applicationId,可以优化
+        //applicationId "com.example.music"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode 1
@@ -23,6 +24,7 @@ android {
         }
     }
 
+    resourcePrefix 'music_'
 }
 
 dependencies {

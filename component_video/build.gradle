@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.component'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -6,7 +6,6 @@ android {
 
 
     defaultConfig {
-        applicationId "com.example.video"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode 1
@@ -23,6 +22,7 @@ android {
         }
     }
 
+    resourcePrefix 'video_'
 }
 
 dependencies {

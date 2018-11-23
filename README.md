@@ -104,7 +104,6 @@ repo/
             ├── maven-metadata.xml
             ├── maven-metadata.xml.md5
             └── maven-metadata.xml.sha1
-
 ```
 
 ## 应用插件
@@ -150,3 +149,42 @@ All tasks runnable from project :app
 2. 顶级gradle.build中注释`classpath 'com.example:componentization:1.0'`
 
 这样将所有可能用到目前还不存在的插件都屏蔽了, 然后去生成jar包使用.
+
+## 组件化项目
+这里不详细讨论android的组件化, 查看以下文章以了解:
+ * [Android彻底组件化方案实践](https://www.jianshu.com/p/1b1d77f58e84)
+ * [浅谈Android组件化](https://link.jianshu.com/?t=https%3A%2F%2Fmp.weixin.qq.com%2Fs%2FRAOjrpie214w0byRndczmg)
+
+实现组件化需要**代码解耦**和**独立运行**, 通过配置一个`isRunningAlone`来标记. 比如music组件
+```groovy
+if(isRunningAlone){
+    apply plugin: 'com.android.application'
+}else{
+    apply plugin: 'com.android.library'
+}
+.....
+resourcePrefix "music_"
+sourceSets {
+    main {
+        manifest.srcFile 'src/runalone/AndroidManifest.xml'
+        java.srcDirs += 'src/runalone/java'
+        res.srcDirs += 'src/runalone/res'
+        assets.srcDirs += 'src/runalone/assets'
+        jniLibs.srcDirs += 'src/runalone/jniLibs'
+    }
+}
+```
+`runalone`目录的结构和`main`完全一样, 类似于多渠道, 作为组件独立运行的代码. 而`main`中的资源和代码则
+作为library添加到其他组件的依赖中. 为了代码合并是尽量避免资源冲突,每个组件配置了专属`resourcePrefix`.
+
+`resourcePrefix "music_"`允许资源命名为music_xxx, Music_Xxx, musicXxx, MusicXxx的形式
+
+以下是插件的配置
+
+
+| 配置属性                     | 说明                                       | 例子            |
+| ------------------------ | ---------------------------------------- | ------------- |
+| com.example.mainmodule   | 主模块名称(需要:作前缀), 配置在顶级gradle.properties中   | :app          |
+| com.example.runningalone | 是否可以独立运行, 配置在各组件的gradle.properties中      | true          |
+| com.example.dependencies | 独立运行时需要的依赖(依组件时需要`:`前缀), 依赖间通过`,`分割. 配置在各组件的gradle.properties中 | :music,:video |
+

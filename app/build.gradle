@@ -1,4 +1,3 @@
-apply plugin: 'com.android.application'
 apply plugin: 'com.android.component'
 
 android {
@@ -17,6 +16,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    resourcePrefix 'app_'
 }
 
 dependencies {
