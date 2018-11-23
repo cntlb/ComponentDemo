@@ -1,5 +1,6 @@
 package com.example.plugin
 
+import com.android.build.gradle.AppExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -85,6 +86,10 @@ class ComponentPlugin implements Plugin<Project> {
                 }
                 Log.i '}'
             }
+
+            //class转换
+            def android = project.extensions.getByType(AppExtension)
+            android.registerTransform(new LifecycleTransform())
         } else {
             project.apply plugin: 'com.android.library'
             Log.i "$project apply plugin: 'com.android.library'"

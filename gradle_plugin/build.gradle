@@ -5,6 +5,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation gradleApi()
     implementation localGroovy()
+    implementation support.gradle_plugin
 }
 
 sourceCompatibility = "7"

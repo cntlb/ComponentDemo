@@ -198,3 +198,95 @@ com.example.dependencies=:component_music,:component_video
 ![组件化](imgs/2.png)
 
 运行app时自动添加music和video作为依赖, 并且music和video可以独立运行!
+
+## 组件的数据传输
+
+通过路由来进行组件之间的跳转和数据传输(可以采用ARouter等等)
+
+## 组件生命周期
+
+上面这些还没有涉及到各个组件的生命周期(初始化,销毁等等), 对于:app主模块来说添加一个Application的
+实现类到AndroidManifest.xml中就可以了. music独立运行时也是没问题的, 但如果作为app的一个依赖, 而
+合并后的AndroidManifest.xml只能有一个Application!
+
+一种解决方案是定义公共的生命周期接口, 再通过APT编译期生成代码到指定包下, 运行时通过DexClassLoader
+搜索动态执行其中的生命周期相关方法. 这种方案可以实现, 但是启动应用时需要搜索整个dex,效率上对于
+一个类比较多的应用来说是不能接受的.
+
+Android的Gradle插件1.5之后新增Gradle Transform技术, 允许对class进行转换. 因此,
+另一种高效的解决方案是在编译成class文件后打包成dex之前通过动态修改class的技术将代码直接插入到
+指定的地方, 运行时直接生效! 这里通过 [ASM字节码操作库](https://asm.ow2.io/asm4-guide.pdf) 来实现.
+
+```groovy
+def android = project.extensions.getByType(AppExtension)
+android.registerTransform(new LifecycleTransform())
+```
+
+```java
+public interface IApplication {
+    void onCreate(Context context);
+    void onTerminate();
+    int priority();
+}
+
+public class AppLifecycleManager {
+
+    private static final ArrayList<String> iAppNames = new ArrayList<>();
+    private static final ArrayList<IApplication> iApps = new ArrayList<>();
+
+    public static void onCreate(Context context) {
+        for (IApplication app : iApps) {
+            app.onCreate(context);
+        }
+    }
+
+    public static void onTerminate() {
+        for (IApplication app : iApps) {
+            app.onTerminate();
+        }
+    }
+
+    // asm字节码中调用
+    private static void register(String className) {
+        iAppNames.add(className);
+    }
+
+    // asm字节码中调用
+    private static void init() {
+        for (String name : iAppNames) {
+            try {
+                iApps.add(((IApplication) Class.forName(name).newInstance()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        Collections.sort(iApps, new Comparator<IApplication>() {
+            @Override
+            public int compare(IApplication o1, IApplication o2) {
+                // 按优先级降序
+                return o2.priority() - o1.priority();
+            }
+        });
+    }
+
+    /*
+    // 通过asm操作字节码将生成如下的静态代码块
+    static {
+        register("a.b.c.IApplicationImpl");
+        register("a.b.d.IApplicationImpl");
+        init();
+    }
+    */
+}
+```
+
+通过ASM搜索IApplication的实现类以及AppLifecycleManager所在的jar包, 再对AppLifecycleManager
+类进行转换, 向`static{}`加入
+```java
+    register("a.b.c.IApplicationImpl");
+    register("a.b.d.IApplicationImpl");
+    init();
+```
+
+ASM框架操作字节码, 功能非常强大. 可以用于组件化、插件化、热修复、AOP等等， 由于内容丰富，这里只
+提供思路，详细查看官方指南和github上的代码。
