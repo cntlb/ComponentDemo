@@ -1,3 +1,6 @@
+
+**首次同步工程失败请查看下面`应用插件`的注意事项**
+
 ## 构建脚本重构
 抽取各个模块一些公共的配置到顶级build.gradle下，比如版本、依赖等
 ```groovy
@@ -103,3 +106,47 @@ repo/
             └── maven-metadata.xml.sha1
 
 ```
+
+## 应用插件
+这时将项目切换到Android视图,点开"Gradle Scripts"比较方便. 顶级build.gradle添加
+```groovy
+buildscript {
+    repositories {
+        maven {
+            url uri('repo')
+        }
+    }
+    dependencies {
+        classpath 'com.example:componentization:1.0'
+    }
+}
+```
+在`buildscript`块中添加本地仓库的路径就是当前根项目目录下的repo, 将插件的jar包加入到构建
+classpath中, 选择一个模块来应用.
+
+**app/build.gradle**添加`apply plugin: 'com.android.component'`后
+执行`./gradlew :app:tasks`看到输出:
+```shell
+$ ./gradlew -q :app:tasks
+ComponentPlugin apply for project ':app'
+
+------------------------------------------------------------
+All tasks runnable from project :app
+------------------------------------------------------------
+
+```
+那么我们的插件就插件并应用成功.
+
+**注意:** 这时如果将工程推送到github上别人clone下来使用, 由于没有将插件发布到中央
+仓库而本地又没有生成插件jar包, 同步肯定会失败(删掉repo目录模拟这种情况). 同步都失败了
+想执行`./gradlew uploadArchives`都跑不成功又怎么去生成本地jar包呢?
+1. settings.gradle中只保留插件模块
+    ```groovy
+    //include ':app'
+    //include ':component_video'
+    //include ':component_music'
+    include ':gradle_plugin'
+    ```
+2. 顶级gradle.build中注释`classpath 'com.example:componentization:1.0'`
+
+这样将所有可能用到目前还不存在的插件都屏蔽了, 然后去生成jar包使用.
