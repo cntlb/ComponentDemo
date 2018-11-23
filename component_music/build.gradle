@@ -32,6 +32,8 @@ dependencies {
 
     implementation support.appcompat_v7
     implementation support.constraint
+    implementation project(':lib_lifecycle_api')
+
     testImplementation androidTest.junit
     androidTestImplementation androidTest.runner
     androidTestImplementation androidTest.espresso
