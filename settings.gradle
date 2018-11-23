@@ -1,1 +1,3 @@
-include ':app', ':component_video', ':component_music'
+include ':app'
+include ':component_video'
+include ':component_music'
