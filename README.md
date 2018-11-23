@@ -188,3 +188,13 @@ sourceSets {
 | com.example.runningalone | 是否可以独立运行, 配置在各组件的gradle.properties中      | true          |
 | com.example.dependencies | 独立运行时需要的依赖(依组件时需要`:`前缀), 依赖间通过`,`分割. 配置在各组件的gradle.properties中 | :music,:video |
 
+## 运行组件化项目
+app/MainActivity中添加两个按钮, 一个跳转到music组件,一个跳转到video组件. music和video的MainActivity分别配置
+Intent Action. app/gradle.properties添加依赖:
+```properties
+com.example.dependencies=:component_music,:component_video
+```
+
+![组件化](imgs/2.png)
+
+运行app时自动添加music和video作为依赖, 并且music和video可以独立运行!
