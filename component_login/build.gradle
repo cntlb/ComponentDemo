@@ -1,20 +1,21 @@
 apply plugin: 'com.android.component'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion versions.compileSdk
+
     defaultConfig {
-        applicationId "com.example.componentdemo"
+        //applicationId "com.example.login"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [AROUTER_MODULE_NAME: project.getName()]
-            }
-        }
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -22,16 +23,23 @@ android {
         }
     }
 
-    resourcePrefix 'app_'
+    resourcePrefix 'login_'
+}
+
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation support.kotlin_stdlib
     implementation support.appcompat_v7
+    implementation support.design
     implementation support.constraint
     implementation arouter.api
-    annotationProcessor arouter.apt
+    kapt arouter.apt
     implementation project(':lib_lifecycle_api')
     implementation project(':lib_common')
 

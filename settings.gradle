@@ -1,4 +1,7 @@
-include ':app', ':lib_lifecycle_api'
+include ':app'
+include ':lib_lifecycle_api'
+include ':component_login'
+include ':lib_common'
 include ':component_video'
 include ':component_music'
 include ':gradle_plugin'

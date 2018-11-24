@@ -1,6 +1,11 @@
 
 **首次同步工程失败请查看下面`应用插件`的注意事项**
 
+按步骤提交代码, 演示Android组件化框架的配置过程
+## 初始化仓库
+
+Android Studio中创建工程. 添加android application:component_music、component_video.
+
 ## 构建脚本重构
 抽取各个模块一些公共的配置到顶级build.gradle下，比如版本、依赖等
 ```groovy
@@ -134,7 +139,7 @@ All tasks runnable from project :app
 ------------------------------------------------------------
 
 ```
-那么我们的插件就插件并应用成功.
+创建插件并成功应用.
 
 **注意:** 这时如果将工程推送到github上别人clone下来使用, 由于没有将插件发布到中央
 仓库而本地又没有生成插件jar包, 同步肯定会失败(删掉repo目录模拟这种情况). 同步都失败了
@@ -165,12 +170,14 @@ if(isRunningAlone){
 .....
 resourcePrefix "music_"
 sourceSets {
-    main {
-        manifest.srcFile 'src/runalone/AndroidManifest.xml'
-        java.srcDirs += 'src/runalone/java'
-        res.srcDirs += 'src/runalone/res'
-        assets.srcDirs += 'src/runalone/assets'
-        jniLibs.srcDirs += 'src/runalone/jniLibs'
+    if (isRunningAlone) {
+        main {
+            manifest.srcFile 'src/runalone/AndroidManifest.xml'
+            java.srcDirs += 'src/runalone/java'
+            res.srcDirs += 'src/runalone/res'
+            assets.srcDirs += 'src/runalone/assets'
+            jniLibs.srcDirs += 'src/runalone/jniLibs'
+        }
     }
 }
 ```
@@ -290,3 +297,12 @@ public class AppLifecycleManager {
 
 ASM框架操作字节码, 功能非常强大. 可以用于组件化、插件化、热修复、AOP等等， 由于内容丰富，这里只
 提供思路，详细查看官方指南和github上的代码。
+
+## 使用ARouter进行组件交互
+
+详细使用查阅[alibaba/**ARouter**](https://github.com/alibaba/ARouter). 这里增加
+使用kotlin的组件component_login模拟登录. 主模块点击登录传递默认的username和password
+在LoginMainActivity中接收, 验证成功后结果响应主模块.
+
+演示了生命周期组件的注册和优先级设置、组件之间完全解耦的交互、公共library的应用、
+gradle插件对kotlin的支持。
