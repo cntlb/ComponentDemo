@@ -179,8 +179,10 @@ class LifecycleTransform extends Transform {
         void visitInsn(int opcode) {
             if (opcode >= IRETURN && opcode <= RETURN) {
                 LIST.each { name ->
-                    mv.visitLdcInsn(name.replace('/', '.'))
-                    mv.visitMethodInsn(INVOKESTATIC, SCAN_MANAGER, "register", "(Ljava/lang/String;)V", false)
+                    mv.visitTypeInsn(NEW, name)
+                    mv.visitInsn(DUP)
+                    mv.visitMethodInsn(INVOKESPECIAL, name, "<init>", "()V", false)
+                    mv.visitMethodInsn(INVOKESTATIC, SCAN_MANAGER, "register", "(L$SCAN_INTERFACE;)V", false)
                 }
                 mv.visitMethodInsn(INVOKESTATIC, SCAN_MANAGER, "init", "()V", false)
             }

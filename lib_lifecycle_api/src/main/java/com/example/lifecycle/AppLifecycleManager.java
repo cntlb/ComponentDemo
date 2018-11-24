@@ -8,8 +8,16 @@ import java.util.Comparator;
 
 public class AppLifecycleManager {
 
-    private static final ArrayList<String> iAppNames = new ArrayList<>();
     private static final ArrayList<IApplication> iApps = new ArrayList<>();
+
+    /*
+    // 通过asm操作字节码将生成如下的静态代码块
+    static {
+        register(new ApplicationImplA());
+        register(new ApplicationImplB());
+        init();
+    }
+    */
 
     public static void onCreate(Context context) {
         for (IApplication app : iApps) {
@@ -23,20 +31,13 @@ public class AppLifecycleManager {
         }
     }
 
-    // asm字节码中调用
-    private static void register(String className) {
-        iAppNames.add(className);
+    // asm操作字节码调用
+    private static void register(IApplication iApplication){
+        iApps.add(iApplication);
     }
 
-    // asm字节码中调用
+    // asm操作字节码调用
     private static void init() {
-        for (String name : iAppNames) {
-            try {
-                iApps.add(((IApplication) Class.forName(name).newInstance()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
         Collections.sort(iApps, new Comparator<IApplication>() {
             @Override
             public int compare(IApplication o1, IApplication o2) {
@@ -45,14 +46,4 @@ public class AppLifecycleManager {
             }
         });
     }
-
-    /*
-    // 通过asm操作字节码将生成如下的静态代码块
-    static {
-        register("a.b.c.IApplicationImpl");
-        register("a.b.d.IApplicationImpl");
-        init();
-    }
-    */
-
 }
