@@ -4,6 +4,7 @@
     package="com.example.music">
 
     <application
+        android:name=".test.MusicTestApplication"
         android:allowBackup="true"
         android:icon="@mipmap/music_ic_launcher"
         android:label="@string/music_name"

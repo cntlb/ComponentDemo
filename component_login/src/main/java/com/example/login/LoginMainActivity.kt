@@ -11,7 +11,7 @@ import com.example.common.Const
 import com.example.common.Routers
 import kotlinx.android.synthetic.main.login_activity_main.*
 
-@Route(path = Routers.MUSIC_MAIN)
+@Route(path = Routers.LOGIN_MAIN)
 class LoginMainActivity : AppCompatActivity() {
     @Autowired
     @JvmField

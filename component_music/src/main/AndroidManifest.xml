@@ -3,13 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.music">
 
-    <application tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="com.example.music.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+    <application>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

@@ -3,8 +3,6 @@ apply plugin: 'com.android.component'
 android {
     compileSdkVersion versions.compileSdk
 
-
-
     defaultConfig {
         //作为组件单独运行即可,不需要applicationId,可以优化
         //applicationId "com.example.music"
@@ -14,7 +12,11 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
     }
 
     buildTypes {
@@ -33,6 +35,9 @@ dependencies {
     implementation support.appcompat_v7
     implementation support.constraint
     implementation project(':lib_lifecycle_api')
+    implementation arouter.api
+    annotationProcessor arouter.apt
+    implementation project(':lib_common')
 
     testImplementation androidTest.junit
     androidTestImplementation androidTest.runner

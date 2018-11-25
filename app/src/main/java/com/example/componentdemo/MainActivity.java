@@ -16,8 +16,6 @@ import com.example.common.Routers;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String MUSIC_MAIN = "com.example.music.MAIN";
-    public static final String VIDEO_MAIN = "com.example.video.MAIN";
     private static final String TAG = "MainActivity";
 
     TextView result;
@@ -30,15 +28,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void gotoMusic(View view) {
-        startActivity(new Intent(MUSIC_MAIN));
+        ARouter.getInstance().build(Routers.MUSIC_MAIN).navigation();
     }
 
     public void gotoVideo(View view) {
-        startActivity(new Intent(VIDEO_MAIN));
+        ARouter.getInstance().build(Routers.VIDEO_MAIN).navigation();
     }
 
     public void gotoLogin(View view) {
-        ARouter.getInstance().build(Routers.MUSIC_MAIN)
+        ARouter.getInstance().build(Routers.LOGIN_MAIN)
                 .withString("username", "zhangsan")
                 .withString("password", "123456")
                 .navigation(this, Const.Request.LOGIN, new NavCallback() {

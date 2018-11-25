@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.video">
 
     <application
-        android:allowBackup="true"
+        android:name=".test.VideoTestApplication"
+        android:allowBackup="false"
         android:icon="@mipmap/video_ic_launcher"
         android:label="@string/video_name"
         android:roundIcon="@mipmap/video_ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/VideoTheme">
+        android:theme="@style/VideoTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

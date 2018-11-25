@@ -1,8 +1,12 @@
 package com.example.video;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.example.common.Routers;
+
+@Route(path = Routers.VIDEO_MAIN)
 public class MainActivity extends AppCompatActivity {
 
     @Override
