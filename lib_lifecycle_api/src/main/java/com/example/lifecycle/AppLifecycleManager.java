@@ -13,8 +13,8 @@ public class AppLifecycleManager {
     /*
     // 通过asm操作字节码将生成如下的静态代码块
     static {
-        register(new ApplicationImplA());
-        register(new ApplicationImplB());
+        register("a.b.c.IApplicationImpl");
+        register("a.b.d.IApplicationImpl");
         init();
     }
     */
@@ -32,8 +32,12 @@ public class AppLifecycleManager {
     }
 
     // asm操作字节码调用
-    private static void register(IApplication iApplication){
-        iApps.add(iApplication);
+    private static void register(String classname){
+        try {
+            iApps.add((IApplication) Class.forName(classname).newInstance());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // asm操作字节码调用

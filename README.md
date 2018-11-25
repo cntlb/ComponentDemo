@@ -1,5 +1,10 @@
 
-**首次同步工程失败请查看下面`应用插件`的注意事项**
+clone工程后执行:
+```shell
+$ cd gradle_plugin
+$ ./gradlew uploadArchives
+```
+然后再同步工程
 
 按步骤提交代码, 演示Android组件化框架的配置过程
 ## 初始化仓库
@@ -143,17 +148,18 @@ All tasks runnable from project :app
 
 **注意:** 这时如果将工程推送到github上别人clone下来使用, 由于没有将插件发布到中央
 仓库而本地又没有生成插件jar包, 同步肯定会失败(删掉repo目录模拟这种情况). 同步都失败了
-想执行`./gradlew uploadArchives`都跑不成功又怎么去生成本地jar包呢?
-1. settings.gradle中只保留插件模块
-    ```groovy
-    //include ':app'
-    //include ':component_video'
-    //include ':component_music'
-    include ':gradle_plugin'
-    ```
-2. 顶级gradle.build中注释`classpath 'com.example:componentization:1.0'`
-
-这样将所有可能用到目前还不存在的插件都屏蔽了, 然后去生成jar包使用.
+想执行`./gradlew uploadArchives`都跑不成功又怎么去生成本地jar包呢? 将插件重构立成
+一个可以独立运行的项目包含在应用项目中, 并且将源码目录include进去(**顶级settings.gradle**)
+```groovy
+include 'gradle_plugin'
+project(':gradle_plugin').projectDir = file('gradle_plugin/plugin')
+```
+包含的目的是为了利用ide进行插件的开发和修改. 执行
+```shell
+$ cd gradle_plugin
+$ ./gradlew uploadArchives
+```
+生成插件jar包.
 
 ## 组件化项目
 这里不详细讨论android的组件化, 查看以下文章以了解:

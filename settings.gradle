@@ -4,4 +4,6 @@ include ':component_login'
 include ':lib_common'
 include ':component_video'
 include ':component_music'
-include ':gradle_plugin'
+
+include 'gradle_plugin'
+project(':gradle_plugin').projectDir = file('gradle_plugin/plugin')

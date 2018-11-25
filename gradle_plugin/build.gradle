@@ -1,23 +1,17 @@
-apply plugin: 'groovy'
-apply plugin: 'maven'
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
 
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation gradleApi()
-    implementation localGroovy()
-    implementation support.gradle_plugin
+    dependencies{
+        classpath 'com.android.tools.build:gradle:3.2.1'
+    }
 }
 
-sourceCompatibility = "7"
-targetCompatibility = "7"
-
-uploadArchives{
-    repositories.mavenDeployer{
-        repository(url:uri("../repo"))
-        pom.project{
-            groupId = 'com.example'
-            artifactId = 'componentization'
-            version = '1.0'
-        }
+allprojects {
+    repositories {
+        google()
+        jcenter()
     }
 }
