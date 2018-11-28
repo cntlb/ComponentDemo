@@ -6,6 +6,22 @@ $ ./gradlew uploadArchives
 ```
 然后再同步工程
 
+插件已发布到maven仓库:
+```
+// 添加maven
+maven {
+    url 'https://dl.bintray.com/gradle-plugin/maven'
+}
+
+//添加classpath
+dependencies {
+    classpath 'com.example:componentization:1.0'
+}
+
+//代替 apply plugin: 'com.android.application'
+apply plugin: 'com.android.component'
+```
+
 按步骤提交代码, 演示Android组件化框架的配置过程
 ## 初始化仓库
 

@@ -31,11 +31,12 @@ buildscript {
     ]
 
     repositories {
-        maven {
-            url uri('repo')
-        }
+//        maven { url uri('repo') }
         google()
         jcenter()
+        maven {
+            url 'https://dl.bintray.com/gradle-plugin/maven'
+        }
     }
     dependencies {
         classpath support.gradle_plugin
